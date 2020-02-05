@@ -78,16 +78,27 @@ def preprocess(args):
 
 def load_data(args):
 
-    preprocess(args)
+    # preprocess(args)
 
     def labeler(example, index):
         return example, tf.cast(index, tf.int64)
 
-    datasets = {}
+    datasets = {
+        'train': [],
+        'test': [],
+        'valid': []
+    }
 
-    for label, key in enumerate(['train', 'valid', 'test']):
-        lines_dataset = tf.data.TextLineDataset('{}.{}.txt'.format(key, label))
-        datasets[key] = lines_dataset.map(lambda ex: labeler(ex, label))
+    for key in ['train', 'valid', 'test']:
+        for label in range(3):
+            lines_dataset = tf.data.TextLineDataset('{}.{}.txt'.format(key, label))
+            datasets[key].append(lines_dataset.map(lambda ex: labeler(ex, label)))
+
+    for key, subsets in datasets.items():
+        data = subsets[0]
+        for x in subsets[1:]:
+            data = data.concatenate(x)
+        datasets[key] = data
 
     encoder = tfds.features.text.TokenTextEncoder.load_from_file('encoder')
 
