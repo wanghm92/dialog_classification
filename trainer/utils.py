@@ -37,6 +37,7 @@ def preprocess(args):
             samples = fin.read().split(label)
             for s in tqdm(samples[1:]):
                 # replacing the pipe '|' symbols with periods '.' to indicate the end of a sentence
+                # TODO: another way is to use each sentence as individual samples
                 words = s.lower().replace('|', ' . ').split()[:-1]
                 # remove the leading/trailing quotes
                 words = [t.strip().strip('"') for t in words]

@@ -50,7 +50,7 @@ def get_args():
     parser.add_argument(
         '--num-epochs',
         type=int,
-        default=2,
+        default=10,
         help='number of times to go through the data, default=20')
     parser.add_argument(
         '--min-freq',
