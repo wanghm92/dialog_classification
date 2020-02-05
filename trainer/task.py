@@ -21,11 +21,11 @@ from __future__ import print_function
 import argparse
 import os
 
-# from . import model
-# from . import utils
+from . import model
+from . import utils
 
-import model
-import utils
+# import model
+# import utils
 
 import tensorflow as tf
 
@@ -73,13 +73,14 @@ def get_args():
 def train_and_evaluate(args):
     """Trains and evaluates the Keras model.
 
-    Uses the Keras model defined in model.py and trains on data loaded and
-    preprocessed in util.py. Saves the trained model in TensorFlow SavedModel
-    format to the path defined in part by the --job-dir argument.
+    Uses the Keras model defined in model.py
+    Trains on data loaded and preprocessed in util.py.
+    Saves the trained model in TensorFlow SavedModel format to the path defined in part by the --job-dir
 
     Args:
     args: dictionary of arguments - see get_args() for details
     """
+    # load and prepare datasets
     train_data, val_data, test_data, vocab_size = utils.prepare_data(args)
 
     # Create the Keras Model
@@ -108,6 +109,7 @@ def train_and_evaluate(args):
     print('\nEval loss: {:.3f}, Eval accuracy: {:.3f}'.format(eval_loss, eval_acc))
     '''
 
+    # Saving the trained model
     export_path = os.path.join(args.job_dir, 'keras_export')
     tf.contrib.saved_model.save_keras_model(keras_model, export_path)
     print('Model exported to: {}'.format(export_path))
