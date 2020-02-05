@@ -21,8 +21,11 @@ from __future__ import print_function
 import argparse
 import os
 
-from . import model
-from . import utils
+# from . import model
+# from . import utils
+
+import model
+import utils
 
 import tensorflow as tf
 
@@ -50,6 +53,11 @@ def get_args():
         default=2,
         help='number of times to go through the data, default=20')
     parser.add_argument(
+        '--min-freq',
+        type=int,
+        default=2,
+        help='number of times a word appears in the dataset to be included in the vocab')
+    parser.add_argument(
         '--batch-size',
         default=64,
         type=int,
@@ -72,10 +80,10 @@ def train_and_evaluate(args):
     Args:
     args: dictionary of arguments - see get_args() for details
     """
-    train_data, val_data, test_data, vocab = my_utils.prepare_data(args)
+    train_data, val_data, test_data, vocab_size = utils.prepare_data(args)
 
     # Create the Keras Model
-    keras_model = model.create_keras_model(len(vocab)+2)
+    keras_model = model.create_keras_model(vocab_size)
 
     # Setup Learning Rate decay.
     lr_decay_cb = tf.keras.callbacks.LearningRateScheduler(
